@@ -1,0 +1,390 @@
+/* Calendar View Styles for Marty Task Commander */
+
+/* Daily View Styles */
+.daily-view {
+  width: 100%;
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-md);
+  overflow: hidden;
+  margin-bottom: var(--spacing-lg);
+}
+
+.timeline-header {
+  display: flex;
+  background-color: var(--primary-color);
+  color: white;
+}
+
+.timeline-villa-header {
+  width: 150px;
+  padding: var(--spacing-sm);
+  font-weight: 600;
+  text-align: center;
+  border-right: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.timeline-hours {
+  display: flex;
+  flex: 1;
+}
+
+.timeline-hour {
+  flex: 1;
+  padding: var(--spacing-sm);
+  text-align: center;
+  font-size: 0.8rem;
+  border-right: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.timeline-hour:last-child {
+  border-right: none;
+}
+
+.timeline-body {
+  background-color: white;
+}
+
+.timeline-row {
+  display: flex;
+  border-bottom: 1px solid var(--border-color);
+  height: 60px;
+}
+
+.timeline-row:last-child {
+  border-bottom: none;
+}
+
+.timeline-villa {
+  width: 150px;
+  padding: var(--spacing-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  border-right: 1px solid var(--border-color);
+}
+
+.timeline-events {
+  flex: 1;
+  position: relative;
+}
+
+.timeline-event {
+  position: absolute;
+  top: 5px;
+  height: calc(100% - 10px);
+  border-radius: var(--border-radius-sm);
+  padding: var(--spacing-xs) var(--spacing-sm);
+  font-size: 0.8rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: var(--shadow-sm);
+  opacity: 0.8;
+}
+
+.timeline-event:hover {
+  opacity: 1;
+  box-shadow: var(--shadow-md);
+  z-index: 10;
+}
+
+.event-title {
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.event-time {
+  font-size: 0.7rem;
+  opacity: 0.8;
+}
+
+/* Weekly View Styles */
+.weekly-view {
+  width: 100%;
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-md);
+  overflow: hidden;
+  margin-bottom: var(--spacing-lg);
+}
+
+.week-header {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  background-color: var(--primary-color);
+  color: white;
+}
+
+.week-day-header {
+  padding: var(--spacing-sm);
+  text-align: center;
+  font-weight: 600;
+  border-right: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.week-day-header:last-child {
+  border-right: none;
+}
+
+.week-body {
+  background-color: white;
+}
+
+.week-villa-section {
+  margin-bottom: var(--spacing-md);
+}
+
+.week-villa-header {
+  padding: var(--spacing-sm);
+  font-weight: 600;
+  text-align: center;
+}
+
+.week-villa-days {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  border-top: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.week-day {
+  min-height: 80px;
+  padding: var(--spacing-xs);
+  border-right: 1px solid var(--border-color);
+}
+
+.week-day:last-child {
+  border-right: none;
+}
+
+.week-event {
+  margin-bottom: var(--spacing-xs);
+  padding: var(--spacing-xs);
+  border-radius: var(--border-radius-sm);
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: var(--shadow-sm);
+}
+
+.week-event:hover {
+  box-shadow: var(--shadow-md);
+}
+
+.week-event .event-title {
+  font-size: 0.75rem;
+}
+
+.week-event .event-type {
+  font-size: 0.7rem;
+  opacity: 0.8;
+}
+
+/* Monthly View Styles */
+.monthly-view {
+  width: 100%;
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-md);
+  overflow: hidden;
+  margin-bottom: var(--spacing-lg);
+}
+
+.month-header {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  background-color: var(--primary-color);
+  color: white;
+}
+
+.month-day-header {
+  padding: var(--spacing-sm);
+  text-align: center;
+  font-weight: 600;
+  border-right: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.month-day-header:last-child {
+  border-right: none;
+}
+
+.month-body {
+  background-color: white;
+}
+
+.month-week {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.month-week:last-child {
+  border-bottom: none;
+}
+
+.month-day {
+  min-height: 100px;
+  padding: var(--spacing-xs);
+  border-right: 1px solid var(--border-color);
+  background-color: white;
+}
+
+.month-day:last-child {
+  border-right: none;
+}
+
+.month-day.other-month {
+  background-color: var(--background-color);
+  opacity: 0.7;
+}
+
+.month-day.today {
+  background-color: rgba(74, 111, 165, 0.1);
+}
+
+.day-number {
+  font-size: 0.8rem;
+  font-weight: 600;
+  margin-bottom: var(--spacing-xs);
+}
+
+.day-events {
+  font-size: 0.8rem;
+}
+
+.day-event {
+  padding: var(--spacing-xs);
+  margin-bottom: var(--spacing-xs);
+  border-radius: var(--border-radius-sm);
+  font-size: 0.7rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.day-event:hover {
+  opacity: 1;
+}
+
+.day-event.ceskomalinska {
+  background-color: var(--ceskomalinska-color);
+}
+
+.day-event.podoli {
+  background-color: var(--podoli-color);
+}
+
+.day-event.marna {
+  background-color: var(--marna-color);
+}
+
+/* Reservation Details Modal */
+.reservation-details {
+  padding: var(--spacing-md);
+}
+
+.reservation-detail-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: var(--spacing-md);
+}
+
+.reservation-villa {
+  font-weight: 600;
+  font-size: 1.2rem;
+}
+
+.reservation-nights {
+  font-weight: 600;
+}
+
+.reservation-dates {
+  display: flex;
+  gap: var(--spacing-md);
+  margin-bottom: var(--spacing-md);
+  padding: var(--spacing-sm);
+  background-color: var(--background-color);
+  border-radius: var(--border-radius-sm);
+}
+
+.reservation-guest {
+  margin-bottom: var(--spacing-md);
+  padding: var(--spacing-sm);
+  background-color: var(--background-color);
+  border-radius: var(--border-radius-sm);
+}
+
+.reservation-description {
+  margin-bottom: var(--spacing-md);
+}
+
+.reservation-description h3 {
+  margin-bottom: var(--spacing-xs);
+  font-size: 1rem;
+}
+
+.reservation-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--spacing-md);
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .timeline-villa-header {
+    width: 100px;
+  }
+  
+  .timeline-villa {
+    width: 100px;
+  }
+  
+  .timeline-hour {
+    font-size: 0.7rem;
+  }
+  
+  .week-event .event-title {
+    font-size: 0.7rem;
+  }
+  
+  .month-day {
+    min-height: 80px;
+  }
+}
+
+@media (max-width: 480px) {
+  .timeline-villa-header {
+    width: 80px;
+  }
+  
+  .timeline-villa {
+    width: 80px;
+  }
+  
+  .timeline-hour {
+    font-size: 0.6rem;
+  }
+  
+  .week-event .event-title {
+    display: none;
+  }
+  
+  .month-day {
+    min-height: 60px;
+  }
+  
+  .day-event {
+    height: 10px;
+    padding: 0;
+  }
+  
+  .day-event .event-title,
+  .day-event .event-type {
+    display: none;
+  }
+}

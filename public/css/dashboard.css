@@ -1,0 +1,327 @@
+/* Responsive Dashboard Layout for Marty Task Commander */
+
+.dashboard {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  grid-gap: var(--spacing-md);
+  margin-bottom: var(--spacing-lg);
+}
+
+.dashboard-card {
+  background-color: white;
+  border-radius: var(--border-radius-md);
+  box-shadow: var(--shadow-sm);
+  padding: var(--spacing-md);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.dashboard-card:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-md);
+}
+
+.dashboard-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--spacing-md);
+  padding-bottom: var(--spacing-sm);
+  border-bottom: 1px solid var(--border-color-light);
+}
+
+.dashboard-card-title {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.dashboard-card-icon {
+  font-size: 1.5rem;
+  color: var(--primary-color);
+}
+
+.dashboard-card-content {
+  height: 100%;
+}
+
+/* Card sizes */
+.card-sm {
+  grid-column: span 3;
+}
+
+.card-md {
+  grid-column: span 6;
+}
+
+.card-lg {
+  grid-column: span 9;
+}
+
+.card-xl {
+  grid-column: span 12;
+}
+
+/* Villa-specific dashboard cards */
+.dashboard-card.villa-ceskomalinska .dashboard-card-header {
+  border-bottom-color: var(--villa-ceskomalinska-color);
+}
+
+.dashboard-card.villa-ceskomalinska .dashboard-card-icon {
+  color: var(--villa-ceskomalinska-color);
+}
+
+.dashboard-card.villa-podoli .dashboard-card-header {
+  border-bottom-color: var(--villa-podoli-color);
+}
+
+.dashboard-card.villa-podoli .dashboard-card-icon {
+  color: var(--villa-podoli-color);
+}
+
+.dashboard-card.villa-marna .dashboard-card-header {
+  border-bottom-color: var(--villa-marna-color);
+}
+
+.dashboard-card.villa-marna .dashboard-card-icon {
+  color: var(--villa-marna-color);
+}
+
+/* Stats cards */
+.stats-card {
+  text-align: center;
+}
+
+.stats-value {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin: var(--spacing-sm) 0;
+  color: var(--primary-color);
+}
+
+.stats-label {
+  font-size: 0.9rem;
+  color: var(--text-color-light);
+}
+
+/* Quick actions */
+.quick-actions {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-gap: var(--spacing-sm);
+}
+
+.quick-action-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-md);
+  background-color: var(--light-color);
+  border-radius: var(--border-radius-sm);
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.quick-action-btn:hover {
+  background-color: var(--border-color-light);
+}
+
+.quick-action-icon {
+  font-size: 1.5rem;
+  margin-bottom: var(--spacing-xs);
+  color: var(--primary-color);
+}
+
+.quick-action-label {
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+/* Recent activity */
+.activity-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.activity-item {
+  display: flex;
+  align-items: flex-start;
+  padding: var(--spacing-sm) 0;
+  border-bottom: 1px solid var(--border-color-light);
+}
+
+.activity-item:last-child {
+  border-bottom: none;
+}
+
+.activity-icon {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background-color: var(--light-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: var(--spacing-sm);
+  flex-shrink: 0;
+}
+
+.activity-icon i {
+  font-size: 0.9rem;
+  color: var(--primary-color);
+}
+
+.activity-content {
+  flex: 1;
+}
+
+.activity-title {
+  font-weight: 500;
+  margin-bottom: 2px;
+}
+
+.activity-time {
+  font-size: 0.8rem;
+  color: var(--text-color-light);
+}
+
+/* Calendar widget */
+.calendar-widget {
+  width: 100%;
+}
+
+.calendar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--spacing-sm);
+}
+
+.calendar-title {
+  font-weight: 600;
+}
+
+.calendar-nav {
+  display: flex;
+  gap: var(--spacing-xs);
+}
+
+.calendar-nav-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--primary-color);
+}
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 2px;
+}
+
+.calendar-day-name {
+  text-align: center;
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: var(--spacing-xs);
+  color: var(--text-color-light);
+}
+
+.calendar-day {
+  aspect-ratio: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--border-radius-sm);
+  cursor: pointer;
+  position: relative;
+  transition: background-color 0.2s ease;
+}
+
+.calendar-day:hover {
+  background-color: var(--border-color-light);
+}
+
+.calendar-day.today {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+.calendar-day.has-events::after {
+  content: '';
+  position: absolute;
+  bottom: 4px;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background-color: var(--primary-color);
+}
+
+.calendar-day.today.has-events::after {
+  background-color: white;
+}
+
+.calendar-day.other-month {
+  color: var(--text-color-light);
+  opacity: 0.5;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1200px) {
+  .card-sm {
+    grid-column: span 4;
+  }
+  
+  .card-md {
+    grid-column: span 6;
+  }
+  
+  .card-lg {
+    grid-column: span 8;
+  }
+}
+
+@media (max-width: 992px) {
+  .card-sm {
+    grid-column: span 6;
+  }
+  
+  .card-md {
+    grid-column: span 6;
+  }
+  
+  .card-lg {
+    grid-column: span 12;
+  }
+}
+
+@media (max-width: 768px) {
+  .dashboard {
+    grid-gap: var(--spacing-sm);
+  }
+  
+  .card-sm, .card-md, .card-lg, .card-xl {
+    grid-column: span 12;
+  }
+  
+  .dashboard-card {
+    padding: var(--spacing-sm);
+  }
+  
+  .stats-value {
+    font-size: 2rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .quick-actions {
+    grid-template-columns: 1fr;
+  }
+  
+  .calendar-day-name, .calendar-day {
+    font-size: 0.8rem;
+  }
+}

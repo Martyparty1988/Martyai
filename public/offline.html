@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#4a6fa5">
+    <title>Marty Task Commander - Offline</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" type="image/png" href="images/icon-192x192.png">
+    <link rel="apple-touch-icon" href="images/icon-192x192.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .offline-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            text-align: center;
+            padding: 20px;
+        }
+        
+        .offline-icon {
+            font-size: 5rem;
+            color: #4a6fa5;
+            margin-bottom: 20px;
+        }
+        
+        .offline-title {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+        
+        .offline-message {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            max-width: 600px;
+        }
+        
+        .retry-button {
+            background-color: #4a6fa5;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 4px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .retry-button:hover {
+            background-color: #3a5a8a;
+        }
+        
+        .cached-data {
+            margin-top: 40px;
+            width: 100%;
+            max-width: 600px;
+        }
+        
+        .cached-data h2 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: #4a6fa5;
+        }
+        
+        .data-section {
+            background-color: #f5f5f5;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .data-section h3 {
+            margin-top: 0;
+            margin-bottom: 10px;
+            color: #333;
+        }
+        
+        .data-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .data-list li {
+            padding: 8px 0;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .data-list li:last-child {
+            border-bottom: none;
+        }
+        
+        .empty-data {
+            font-style: italic;
+            color: #777;
+        }
+    </style>
+</head>
+<body>
+    <div class="offline-container">
+        <div class="offline-icon">
+            <i class="fas fa-wifi-slash"></i>
+        </div>
+        <h1 class="offline-title">Jste offline</h1>
+        <p class="offline-message">
+            Vypadá to, že nemáte připojení k internetu. Některé funkce aplikace Marty Task Commander nemusí být dostupné.
+            Můžete však stále zobrazit dříve načtené údaje a pracovat s nimi.
+        </p>
+        <button class="retry-button" onclick="retryConnection()">
+            <i class="fas fa-sync-alt"></i> Zkusit znovu
+        </button>
+        
+        <div class="cached-data">
+            <h2>Dostupná data v offline režimu</h2>
+            
+            <div class="data-section">
+                <h3>Rezervace</h3>
+                <ul id="cached-reservations" class="data-list">
+                    <li class="empty-data">Načítání uložených rezervací...</li>
+                </ul>
+            </div>
+            
+            <div class="data-section">
+                <h3>Úkoly</h3>
+                <ul id="cached-tasks" class="data-list">
+                    <li class="empty-data">Načítání uložených úkolů...</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Check if IndexedDB is available
+        if ('indexedDB' in window) {
+            // Load cached reservations
+            loadCachedReservations();
+            
+            // Load cached tasks
+            loadCachedTasks();
+        }
+        
+        // Load cached reservations from IndexedDB
+        function loadCachedReservations() {
+            const request = indexedDB.open('marty-task-commander-db', 1);
+            
+            request.onerror = function(event) {
+                console.error('Error opening IndexedDB:', event.target.error);
+                updateCachedList('cached-reservations', [], 'Žádné uložené rezervace');
+            };
+            
+            request.onsuccess = function(event) {
+                const db = event.target.result;
+                
+                // Check if reservations store exists
+                if (!db.objectStoreNames.contains('reservations')) {
+                    updateCachedList('cached-reservations', [], 'Žádné uložené rezervace');
+                    return;
+                }
+                
+                const transaction = db.transaction(['reservations'], 'readonly');
+                const store = transaction.objectStore('reservations');
+                const reservations = [];
+                
+                store.openCursor().onsuccess = function(event) {
+                    const cursor = event.target.result;
+                    if (cursor) {
+                        reservations.push(cursor.value);
+                        cursor.continue();
+                    } else {
+                        // Sort reservations by date
+                        reservations.sort((a, b) => new Date(a.startDate) - new Date(b.startDate));
+                        
+                        // Update UI with cached reservations
+                        updateCachedList('cached-reservations', reservations, 'Žádné uložené rezervace', formatReservation);
+                    }
+                };
+            };
+        }
+        
+        // Load cached tasks from IndexedDB
+        function loadCachedTasks() {
+            const request = indexedDB.open('marty-task-commander-db', 1);
+            
+            request.onerror = function(event) {
+                console.error('Error opening IndexedDB:', event.target.error);
+                updateCachedList('cached-tasks', [], 'Žádné uložené úkoly');
+            };
+            
+            request.onsuccess = function(event) {
+                const db = event.target.result;
+                
+                // Check if tasks store exists
+                if (!db.objectStoreNames.contains('tasks')) {
+                    updateCachedList('cached-tasks', [], 'Žádné uložené úkoly');
+                    return;
+                }
+                
+                const transaction = db.transaction(['tasks'], 'readonly');
+                const store = transaction.objectStore('tasks');
+                const tasks = [];
+                
+                store.openCursor().onsuccess = function(event) {
+                    const cursor = event.target.result;
+                    if (cursor) {
+                        tasks.push(cursor.value);
+                        cursor.continue();
+                    } else {
+                        // Sort tasks by date
+                        tasks.sort((a, b) => new Date(a.date) - new Date(b.date));
+                        
+                        // Update UI with cached tasks
+                        updateCachedList('cached-tasks', tasks, 'Žádné uložené úkoly', formatTask);
+                    }
+                };
+            };
+        }
+        
+        // Update cached list in UI
+        function updateCachedList(elementId, items, emptyMessage, formatter) {
+            const listElement = document.getElementById(elementId);
+            
+            if (!listElement) return;
+            
+            // Clear list
+            listElement.innerHTML = '';
+            
+            // If no items, show empty message
+            if (!items || items.length === 0) {
+                const emptyItem = document.createElement('li');
+                emptyItem.className = 'empty-data';
+                emptyItem.textContent = emptyMessage;
+                listElement.appendChild(emptyItem);
+                return;
+            }
+            
+            // Add items to list (limit to 5)
+            const itemsToShow = items.slice(0, 5);
+            itemsToShow.forEach(item => {
+                const listItem = document.createElement('li');
+                listItem.innerHTML = formatter ? formatter(item) : item.toString();
+                listElement.appendChild(listItem);
+            });
+            
+            // If more items, show count
+            if (items.length > 5) {
+                const moreItem = document.createElement('li');
+                moreItem.textContent = `... a dalších ${items.length - 5} položek`;
+                listElement.appendChild(moreItem);
+            }
+        }
+        
+        // Format reservation for display
+        function formatReservation(reservation) {
+            const startDate = new Date(reservation.startDate);
+            const endDate = new Date(reservation.endDate);
+            
+            const formattedStartDate = startDate.toLocaleDateString('cs-CZ');
+            const formattedEndDate = endDate.toLocaleDateString('cs-CZ');
+            
+            const villaNames = {
+                ceskomalinska: 'Českomalínská',
+                podoli: 'Podolí',
+                marna: 'Marna'
+            };
+            
+            return `<strong>${villaNames[reservation.villa] || reservation.villa}</strong>: ${reservation.guest} (${formattedStartDate} - ${formattedEndDate})`;
+        }
+        
+        // Format task for display
+        function formatTask(task) {
+            const villaNames = {
+                ceskomalinska: 'Českomalínská',
+                podoli: 'Podolí',
+                marna: 'Marna'
+            };
+            
+            const priorityLabels = {
+                high: 'Vysoká',
+                medium: 'Střední',
+                low: 'Nízká'
+            };
+            
+            const formattedDate = new Date(task.date).toLocaleDateString('cs-CZ');
+            
+            return `<strong>${task.title}</strong> - ${villaNames[task.villa] || task.villa} (${formattedDate}) - ${task.completed ? '✓ Dokončeno' : '⬜ Nedokončeno'}`;
+        }
+        
+        // Retry connection
+        function retryConnection() {
+            // Show loading state
+            const button = document.querySelector('.retry-button');
+            const originalText = button.innerHTML;
+            button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Připojování...';
+            button.disabled = true;
+            
+            // Try to fetch the main page
+            fetch('/')
+                .then(response => {
+                    if (response.ok) {
+                        // If successful, redirect to main page
+                        window.location.href = '/';
+                    } else {
+                        throw new Error('Network response was not ok');
+                    }
+                })
+                .catch(error => {
+                    console.error('Failed to reconnect:', error);
+                    
+                    // Reset button
+                    button.innerHTML = originalText;
+                    button.disabled = false;
+                    
+                    // Show error message
+                    alert('Připojení k internetu se nezdařilo. Zkuste to prosím později.');
+                });
+        }
+    </script>
+</body>
+</html>

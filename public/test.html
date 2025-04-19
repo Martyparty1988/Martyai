@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#4a6fa5">
+  <title>Marty AI - Test Suite</title>
+  
+  <!-- Favicon -->
+  <link rel="icon" href="images/icon-192x192.png">
+  
+  <!-- PWA manifest -->
+  <link rel="manifest" href="manifest.json">
+  
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="css/modern-style.css">
+  <link rel="stylesheet" href="css/enhanced-visuals.css">
+  <link rel="stylesheet" href="css/calendar-view.css">
+  <link rel="stylesheet" href="css/task-manager.css">
+  
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  
+  <style>
+    /* Test Suite Specific Styles */
+    .test-container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    
+    .test-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    
+    .test-controls {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    
+    .test-category-button {
+      padding: 8px 12px;
+      background-color: #f0f0f0;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+    
+    .test-category-button:hover {
+      background-color: #e0e0e0;
+    }
+    
+    #run-all-tests {
+      background-color: var(--primary-color);
+      color: white;
+    }
+    
+    #run-all-tests:hover {
+      background-color: var(--primary-color-dark);
+    }
+    
+    #test-progress {
+      margin-bottom: 15px;
+      font-weight: 500;
+    }
+    
+    #test-results {
+      margin-bottom: 20px;
+    }
+    
+    .test-summary {
+      display: flex;
+      justify-content: space-between;
+      background-color: #f5f5f5;
+      padding: 10px;
+      border-radius: 4px;
+    }
+    
+    .test-summary-item {
+      padding: 5px 10px;
+      border-radius: 4px;
+    }
+    
+    .test-summary-item.total {
+      background-color: #e0e0e0;
+    }
+    
+    .test-summary-item.passed {
+      background-color: #c8e6c9;
+    }
+    
+    .test-summary-item.failed {
+      background-color: #ffcdd2;
+    }
+    
+    .test-summary-item.skipped {
+      background-color: #e0e0e0;
+    }
+    
+    #test-log {
+      max-height: 400px;
+      overflow-y: auto;
+      border: 1px solid #e0e0e0;
+      border-radius: 4px;
+      padding: 10px;
+    }
+    
+    .test-log-item {
+      padding: 8px;
+      margin-bottom: 5px;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+    }
+    
+    .test-log-item.running {
+      background-color: #e3f2fd;
+    }
+    
+    .test-log-item.passed {
+      background-color: #e8f5e9;
+    }
+    
+    .test-log-item.failed {
+      background-color: #ffebee;
+    }
+    
+    .test-log-item.skipped {
+      background-color: #f5f5f5;
+      color: #757575;
+    }
+    
+    .test-status {
+      margin-right: 10px;
+      font-size: 18px;
+    }
+    
+    .test-name {
+      flex: 1;
+      font-weight: 500;
+    }
+    
+    .test-category {
+      background-color: #e0e0e0;
+      padding: 2px 8px;
+      border-radius: 10px;
+      font-size: 12px;
+    }
+    
+    .test-error {
+      margin-top: 5px;
+      padding: 5px 10px;
+      background-color: #ffcdd2;
+      border-radius: 4px;
+      font-size: 14px;
+      margin-left: 30px;
+    }
+    
+    /* Notification */
+    .notification {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      padding: 10px 20px;
+      border-radius: 4px;
+      background-color: #2196f3;
+      color: white;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+      z-index: 1000;
+      opacity: 1;
+      transition: opacity 0.3s ease, transform 0.3s ease;
+    }
+    
+    .notification.hidden {
+      opacity: 0;
+      transform: translateX(-50%) translateY(20px);
+      pointer-events: none;
+    }
+    
+    .notification.success {
+      background-color: #4caf50;
+    }
+    
+    .notification.error {
+      background-color: #f44336;
+    }
+    
+    .notification.warning {
+      background-color: #ff9800;
+    }
+    
+    .notification.info {
+      background-color: #2196f3;
+    }
+  </style>
+</head>
+<body>
+  <header class="modern-header">
+    <div class="header-content">
+      <h1>Marty AI - Test Suite</h1>
+      <a href="modern-index.html" class="btn btn-secondary">Zpět do aplikace</a>
+    </div>
+  </header>
+
+  <main class="test-container">
+    <div class="test-header">
+      <h2>Testování komponent a funkcí</h2>
+      <button id="run-all-tests" class="btn btn-primary">Spustit všechny testy</button>
+    </div>
+    
+    <div class="test-controls">
+      <button class="test-category-button" data-category="localStorage">LocalStorage</button>
+      <button class="test-category-button" data-category="settings">Nastavení</button>
+      <button class="test-category-button" data-category="openai">OpenAI</button>
+      <button class="test-category-button" data-category="telegram">Telegram</button>
+      <button class="test-category-button" data-category="voice">Hlasové diktování</button>
+      <button class="test-category-button" data-category="calendar">Kalendář</button>
+      <button class="test-category-button" data-category="ui">UI</button>
+      <button class="test-category-button" data-category="integration">Integrace</button>
+    </div>
+    
+    <div id="test-progress">Vyberte kategorii testů nebo spusťte všechny testy.</div>
+    
+    <div id="test-results"></div>
+    
+    <div id="test-log"></div>
+  </main>
+  
+  <div id="notification" class="notification hidden"></div>
+  
+  <!-- Scripts -->
+  <script src="js/localstorage-manager.js"></script>
+  <script src="js/settings-manager.js"></script>
+  <script src="js/openai-manager.js"></script>
+  <script src="js/telegram-bot-manager.js"></script>
+  <script src="js/voice-dictation-manager.js"></script>
+  <script src="js/floating-calendar.js"></script>
+  <script src="js/main-app.js"></script>
+  <script src="js/test-suite.js"></script>
+</body>
+</html>
